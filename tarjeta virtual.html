@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi vida</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            background: #fae1dd;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            margin-top: 200px; /* Añadido espacio superior */
+            width: 100%; /*CHECAR*/
+            max-width: 350px;
+            margin: 20px;
+        }
+
+        .valentines {
+            position: relative;
+            cursor: pointer;
+            animation: up 3s linear infinite;
+        }
+
+        .envelope {
+            position: relative;
+            width: 350px; /* Aumentado el ancho */
+            height: 250px; /* Aumentado el alto */
+            background: #f08080;
+            display: grid;
+            place-items: center;
+        }
+
+        .envelope::before {
+            content: '';
+            position: absolute;
+            width: 250px; /* Ajustado proporcionalmente */
+            height: 250px;
+            background: #f08080;
+            transform: rotate(45deg);
+            top: -125px;
+            left: 50px;
+            border-radius: 30px 0 0 0;
+        }
+
+        .front {
+            position: absolute;
+            border-right: 210px solid #f4978e; /* Ajustado proporcionalmente */
+            border-top: 125px solid transparent;
+            border-bottom: 125px solid transparent;
+            left: 140px;
+            top: 0;
+            width: 0;
+            height: 0;
+            z-index: 10;
+        }
+
+        .front::before {
+            position: absolute;
+            content: '';
+            border-left: 350px solid #fda996; /* Ajustado al nuevo ancho */
+            border-top: 250px solid transparent; /* Ajustado al nuevo alto */
+            left: -140px;
+            top: -125px;
+        }
+
+        .card {
+            position: relative;
+            width: 300px; /* Aumentado el ancho */
+            height: 250px; /* Aumentado el alto */
+            background: #fff;
+            border-radius: 2px;
+            display: grid;
+            place-items: center;
+            transition: 1s;
+            z-index: 2;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 2px solid #003049;
+            border-style: dashed;
+        }
+
+        .valentines:hover .card,
+        .valentines.touched .card 
+         {
+            transform: translateY(-250px); /* Aumentado el desplazamiento */
+        }
+
+        .card .text {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 28px; /* Aumentado el tamaño de fuente */
+            text-align: center;
+            line-height: 1.6;
+            color: #003049;
+            padding: 25px;
+            margin-top: -10px;
+        }
+
+        .heart {
+            height: 50px;
+            width: 50px;
+            background-color: red;
+            position: relative;
+            transform: rotate(45deg);
+            animation: palpitar 0.5s linear infinite alternate;
+            margin: 15px auto;
+        }
+
+        @keyframes palpitar {
+            0% {
+                transform: rotate(45deg) scale(1.10);
+            }
+            80% {
+                transform: rotate(45deg) scale(1.0);
+            }
+            100% {
+                transform: rotate(45deg) scale(0.8);
+            }
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            height: 50px;
+            width: 50px;
+            background: red;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -25px;
+            left: 0;
+        }
+
+        .heart::after {
+            left: -25px;
+            top: 0;
+        }
+
+        @keyframes up {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .next-page {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0b1522 0%, #1a2639 100%);
+            z-index: 20;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.5s ease;
+        }
+
+        
+        .question-page {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: palegoldenrod;
+            z-index: 30;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .beating-heart {
+            height: 125px;
+            width: 125px;
+            background-color: red;
+            position: relative;
+            transform: rotate(45deg);
+            box-shadow: -20px 20px 125px #f20044;
+            animation: palpitar 0.5s linear infinite alternate;
+            margin-bottom: 50px;
+        }
+
+        .beating-heart::before,
+        .beating-heart::after {
+            content: "";
+            position: absolute;
+            height: 125px;
+            width: 125px;
+            background: red;
+            border-radius: 50%;
+            box-shadow: 20px 20px 150px #f20044;
+        }
+
+        .beating-heart::before {
+            top: -75px;
+        }
+
+        .beating-heart::after {
+            left: -75px;
+        }
+
+        .message {
+            font-family: 'Dancing Script', cursive;
+            text-align: center;
+            font-size: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .message.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .valentines::before {
+            content: '';
+            position: absolute;
+            width: 380px;
+            height: 25px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.3);
+            bottom: -30px;
+            left: -15px;
+            animation: scale 3s linear infinite;
+        }
+
+        .options {
+            margin-top: 20px;
+        }
+
+        .options button {
+            padding: 10px 30px;
+            margin: 0 10px;
+            font-size: 1.2rem;
+            border: 2px solid rgba(0, 0, 0, 0.9);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #yes {
+            background-color: #97cfaa;
+        }
+
+        #no {
+            background-color: #f36c46;
+        }
+
+        .final-message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: palegoldenrod;
+            z-index: 40;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .final-message h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            animation: palpitation 2s ease-in-out infinite;
+        }
+
+        @keyframes palpitation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes scale {
+            0%, 100% {
+                transform: scaleX(1);
+            }
+            50% {
+                transform: scaleX(0.85);
+            }
+        }
+
+        .placeholder-image {
+            width: 250;
+            height: 250px;
+            background-color: #ffb6c1;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="valentines">
+            <div class="envelope">
+                <div class="card">
+                    <div class="text">
+                        Para Evelin ❤️:<br>
+                        Cada día te amo más y más.
+                        Eres mi razón de sonreír,
+                        mi compañera perfecta.
+                    </div>
+                    <div class="heart"></div>
+                </div>
+            </div>
+            <div class="front"></div>
+        </div>
+    </div>
+
+    <div class="next-page">
+        <div class="beating-heart"></div>
+        <div class="message">
+            <h1>Che py'aite guive rohayhu ❤️</h1>
+            <h2>Feliz San Valentín 2024</h2>
+        </div>
+    </div>
+
+    <div class="question-page">
+        <h1>¿Seguiras a mi lado toda la vida?</h1>
+        <img src="assets/1.jpg" alt="Dino Love" class="placeholder-image">
+        <div class="options">
+            <button id="yes">Sí</button>
+            <button id="no">No</button>
+        </div>
+    </div>
+
+    <div class="final-message">
+        <h1>Siempre supe que dirías que sí ❤️</h1>
+        <img src="assets/2.jpg" alt="Dino Love" class="placeholder-image">
+    </div>
+
+    <script>
+        let fontSize = 2;
+        const messages = [
+            'Estas segura?',
+            'Piénsalo bien',
+            'Piénsalo muy bien',
+            'Piénsalo',
+            'Mira el otro botón'
+        ];
+
+        // Manejo de la tarjeta inicial
+        document.querySelector('.valentines').addEventListener('click', function() {
+            this.classList.add('touched');
+            setTimeout(() => {
+                document.querySelector('.next-page').style.display = 'flex';
+                setTimeout(() => {
+                    document.querySelector('.message').classList.add('visible');
+                    // Mostrar la página de pregunta después de 3 segundos
+                    setTimeout(() => {
+                        document.querySelector('.question-page').style.display = 'flex';
+                    }, 6000);
+                }, 1000);
+            }, 10000);
+        });
+
+        // Manejo de los botones Sí/No
+        const buttonNo = document.querySelector('#no');
+        const buttonYes = document.querySelector('#yes');
+
+        buttonNo.addEventListener('click', () => {
+            fontSize = fontSize + 0.5;
+            buttonYes.style.fontSize = `${fontSize}rem`;
+            const indexRandom = Math.floor(Math.random() * messages.length);
+            buttonNo.textContent = messages[indexRandom];
+        });
+
+        buttonYes.addEventListener('click', () => {
+            document.querySelector('.final-message').style.display = 'flex';
+        });
+
+        // Soporte para dispositivos táctiles
+        document.addEventListener('touchstart', function() {
+            document.querySelector('.valentines').classList.add('touch-device');
+        }, false);
+    </script>
+</body>
+</html>
